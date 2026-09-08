@@ -1,6 +1,9 @@
 """Deployment contracts: factory startup, fresh state, and Linux path spelling."""
 import ast
 import importlib
+import os
+import subprocess
+import sys
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -12,6 +15,30 @@ from app import create_app
 from models import Movie
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_wsgi_import_in_fresh_processes(tmp_path):
+    """Exercise the production module twice, without touching the normal DB."""
+    database = tmp_path / "wsgi" / "catalog.db"
+    environment = dict(os.environ, MOODMOVIE_DATABASE=str(database))
+    code = """
+from flask import Flask
+from wsgi import app
+assert isinstance(app, Flask) and not app.debug
+expected = {'/', '/recommend', '/movies', '/movie/<int:movie_id>', '/search', '/genre/<genre>', '/random'}
+assert expected <= {rule.rule for rule in app.url_map.iter_rules()}
+service = app.extensions['movie_service']
+assert (len(service.get_all_movies()), len(service.get_moods()), len(service.get_genres())) == (24, 6, 8)
+assert app.test_client().get('/').status_code == 200
+assert app.test_client().post('/recommend', data={'mood': 'happy'}).status_code == 200
+app.extensions['database'].close()
+"""
+    assert not database.exists()
+    for _ in range(2):
+        result = subprocess.run([sys.executable, "-c", code], cwd=ROOT,
+                                env=environment, capture_output=True, text=True, timeout=30)
+        assert result.returncode == 0, result.stdout + result.stderr
+    assert database.is_file()
 
 
 def test_factory_entry_point_and_debug(app):
@@ -69,9 +96,9 @@ def assert_exact_case(path):
 
 
 def test_python_imports_and_template_case(app):
-    local_modules = {"app", "config", "models", "routes", "services", "repositories", "database"}
-    sources = [ROOT / "app.py", ROOT / "config.py"]
-    for folder in local_modules - {"app", "config"}:
+    local_modules = {"app", "wsgi", "config", "models", "routes", "services", "repositories", "database"}
+    sources = [ROOT / "app.py", ROOT / "wsgi.py", ROOT / "config.py"]
+    for folder in local_modules - {"app", "wsgi", "config"}:
         sources.extend((ROOT / folder).glob("*.py"))
     for source in sources:
         tree = ast.parse(source.read_text(encoding="utf-8"))
@@ -123,7 +150,6 @@ def test_portable_default_database_path_from_other_directory(tmp_path, monkeypat
     from config import Config
     monkeypatch.chdir(tmp_path)
     # The override, if supplied by the caller, is intentionally not constrained.
-    import os
     if "MOODMOVIE_DATABASE" not in os.environ:
         assert Path(Config.DATABASE_PATH).is_absolute()
         assert Path(Config.DATABASE_PATH) == ROOT / "database" / "moodmovie.db"

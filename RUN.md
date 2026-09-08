@@ -99,13 +99,13 @@ Or, to ensure you use the selected Python environment:
 python -m pytest
 ```
 
-Expected result for this version: **63 passed**. Runtime varies by computer.
+Expected result for this version: **64 passed**. Runtime varies by computer.
 Tests cover model behavior, database integrity and seed initialization, repository
 queries, services, recommendations, all routes, input validation, empty results,
 an empty database, local assets, factory startup, restart preservation, and exact
 Linux filename spelling for imports, templates, and rendered static references.
 
-## 8. Run Application
+## 8. Local Development
 
 With the environment activated:
 
@@ -175,17 +175,19 @@ viewport widths, keyboard access, image fallback, reduced motion, JavaScript
 errors, and operation without JavaScript. Browser tooling is optional and is not
 required to use the application or run pytest.
 
-To validate the Windows production-style WSGI server, run this command from an
-activated environment (the `--call` flag is required for this app factory):
+## Windows Production-style Test
+
+Run this command from an activated environment. `wsgi.py` exposes an application
+object, so Waitress must not use `--call` with this entry point:
 
 ```text
-waitress-serve --call --listen=127.0.0.1:8000 app:create_app
+waitress-serve --listen=127.0.0.1:8000 wsgi:app
 ```
 
 Without activation in PowerShell, the exact tested command is:
 
 ```powershell
-.\.venv\Scripts\waitress-serve.exe --call --listen=127.0.0.1:8000 app:create_app
+.\.venv\Scripts\waitress-serve.exe --listen=127.0.0.1:8000 wsgi:app
 ```
 
 Open `http://127.0.0.1:8000`, then run these checks in another terminal:
@@ -203,7 +205,7 @@ before starting Waitress in that same PowerShell terminal:
 
 ```powershell
 $env:MOODMOVIE_DATABASE = Join-Path (Get-Location) ('artifacts/fresh-' + [guid]::NewGuid().ToString('N') + '/catalog.db')
-.\.venv\Scripts\waitress-serve.exe --call --listen=127.0.0.1:8000 app:create_app
+.\.venv\Scripts\waitress-serve.exe --listen=127.0.0.1:8000 wsgi:app
 ```
 
 The nested directory and database are created on startup. After stopping the
@@ -229,9 +231,10 @@ deactivate
   In PowerShell run `$env:PORT = "5001"` then `python app.py`; in CMD run
   `set PORT=5001` then `python app.py`; in macOS/Linux run `PORT=5001 python app.py`.
   Open `http://127.0.0.1:5001`. Pass that URL to the optional browser script.
-- **`module 'app' has no attribute 'app'`:** use `app:create_app` with Waitress's
-  `--call`, or `"app:create_app()"` with Gunicorn. `app:app` is not this project's
-  entry point. Do not add a second module-level application to work around it.
+- **`module 'app' has no attribute 'app'`:** use `wsgi:app` for both production
+  servers. `app.py` exposes a factory; `wsgi.py` calls it and exposes `app`.
+  The failing `gunicorn app:app` command targets an attribute that does not exist.
+  Update the existing Render service's Start Command as described below.
 - **Gunicorn errors about Unix-only modules on Windows:** run Waitress locally;
   the documented Gunicorn command is for Render/Linux.
 - **Database locked:** stop other app instances or SQLite editors, then restart.
@@ -249,6 +252,7 @@ deactivate
 ```text
 MoodMovie/
   app.py                    Flask factory and dependency composition
+  wsgi.py                   Production application object (wsgi:app)
   config.py                 Portable paths and request limits
   requirements.txt          Application and pytest dependencies
   requirements-browser.txt  Optional Playwright dependency
@@ -259,7 +263,7 @@ MoodMovie/
   routes/                   Thin Flask controllers
   templates/                Jinja pages and reusable components
   static/                   CSS, vanilla JavaScript, local SVG artwork
-  tests/                    63 pytest cases
+  tests/                    64 pytest cases
   scripts/                  Poster builder, HTTP and browser verification
   artifacts/                Generated browser report and screenshots (ignored)
   IMPLEMENTATION_PLAN.md    Requirements analysis and implementation decisions
@@ -274,6 +278,21 @@ MoodMovie/
 ```
 
 # Deploy to Render
+
+## Fix the Existing Render Service
+
+The reported build succeeded, but the existing service still runs the wrong
+command. Commit and push `wsgi.py` together with the updated `render.yaml`.
+In the existing Render service, open **Settings → Build & Deploy → Start Command**,
+replace the old value with the exact Start Command in the table below, and save.
+Then use **Manual Deploy → Deploy latest commit** if a deploy does not begin
+automatically. Confirm the deploy log actually shows `wsgi:app`.
+
+A manually created service does not become blueprint-managed just because
+`render.yaml` was committed. For a blueprint-managed service, sync the changed
+blueprint and verify the effective Start Command. Do not create another service
+to repair the existing one. The hosted settings have not been changed by this
+local fix; pushing the commit and applying the setting are still required.
 
 ## Prerequisites
 
@@ -313,7 +332,7 @@ Free Python service. Choose one creation method to avoid duplicate services.
 | Branch | `main` |
 | Root Directory | **Leave blank** (repository root; do not enter `MoodMovie`) |
 | Build Command | `pip install -r requirements.txt` |
-| Start Command | `gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 "app:create_app()"` |
+| Start Command | `gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 wsgi:app` |
 | Health Check Path | `/` |
 | Plan / Instance Type | Free |
 | Auto Deploy | Yes / On Commit (`autoDeployTrigger: commit` in the blueprint) |
@@ -326,7 +345,9 @@ server as Render's Start Command. [Render port binding documentation](https://re
 The entry point is verified from the actual source: `app.py` defines
 `create_app(test_config=None)`, which constructs Flask, initializes the database,
 composes services/repository, registers blueprints, and returns the WSGI app.
-Gunicorn calls this factory with no arguments. `app.run()` is protected by
+`wsgi.py` imports that factory and calls it once to expose `app`. Gunicorn imports
+`wsgi:app`; no routes or database initialization are duplicated in the entry file.
+`app.run()` is protected by
 `if __name__ == "__main__"` and is never used by the production server.
 
 One worker keeps first-run schema/seed creation in a single process. Four threads
@@ -374,8 +395,12 @@ python scripts/smoke_http.py https://YOUR-ACTUAL-SERVICE.onrender.com
 
 Replace the example hostname. Local verification has passed; an actual hosted
 deployment and these public-URL checks have not been performed during preparation.
-The Linux Gunicorn command was validated against the factory and installed
+The Linux Gunicorn command was validated against the WSGI module and installed
 Gunicorn source, not executed natively on Windows.
+
+Python remains pinned to 3.14.5: this is both the reported Render version and the
+locally tested version. All 64 tests pass with the existing pinned dependencies,
+so this WSGI fix does not require a Python or dependency version change.
 
 ## Cold Start Note
 
