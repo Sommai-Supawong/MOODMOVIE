@@ -1,0 +1,41 @@
+{% macro movie_grid(movies) %}
+<div class="movie-grid">
+{% for movie in movies %}
+  <a class="movie-card" data-tilt href="{{ url_for('movies.detail', movie_id=movie.id) }}" aria-label="View details: {{ movie.title }}">
+    <div class="poster-wrap">
+      <img src="{{ url_for('static', filename=movie.poster) }}" data-fallback="{{ url_for('static', filename='images/poster-fallback.svg') }}" alt="{{ movie.title }} — illustrated poster" width="400" height="600" loading="lazy">
+      <span class="rating"><span aria-hidden="true">★</span> {{ '%.1f'|format(movie.rating) }}<span class="sr-only"> out of 10, demo rating</span></span>
+      <div class="movie-overlay"><span>{{ movie.mood.name }} · {{ movie.duration }} min</span><strong>View details <span aria-hidden="true">↗</span></strong></div>
+    </div>
+    <h3>{{ movie.title }}</h3><p>{{ movie.release_year }} <span aria-hidden="true">·</span> {{ movie.genre.name }}</p>
+  </a>
+{% endfor %}
+</div>
+{% endmacro %}
+
+{% macro mood_selector(moods, selected=none) %}
+<form class="mood-form" action="{{ url_for('main.recommend') }}" method="post">
+  <fieldset><legend class="sr-only">Choose your mood</legend><div class="mood-grid glass">
+  {% for mood in moods %}
+    <button type="submit" name="mood" value="{{ mood.name|lower }}" class="mood-card {% if selected and selected.id == mood.id %}selected{% endif %}" data-tilt aria-pressed="{{ 'true' if selected and selected.id == mood.id else 'false' }}">
+      <span class="mood-emoji" aria-hidden="true">{{ mood.emoji }}</span><strong>{{ mood.name }}</strong><span class="mood-description">{{ mood.description }}</span>
+    </button>
+  {% endfor %}
+  </div></fieldset><p class="loading-status" role="status" aria-live="polite"></p>
+</form>
+{% endmacro %}
+
+{% macro genre_filter(genres, selected=none) %}
+<nav class="genre-chips" aria-label="Filter movies by genre">
+  <a class="chip {% if not selected %}active{% endif %}" {% if not selected %}aria-current="page"{% endif %} href="{{ url_for('movies.catalog') }}">All movies</a>
+  {% for genre in genres %}<a class="chip {% if selected and selected.id == genre.id %}active{% endif %}" {% if selected and selected.id == genre.id %}aria-current="page"{% endif %} href="{{ url_for('movies.genre', genre=genre.name) }}">{{ genre.name }}</a>{% endfor %}
+</nav>
+{% endmacro %}
+
+{% macro search_form(query='') %}
+<form class="search-form glass" action="{{ url_for('movies.search') }}" method="get" role="search">
+  <label for="movie-search" class="sr-only">Search by movie title or keyword</label>
+  <input id="movie-search" name="q" type="search" maxlength="100" value="{{ query }}" placeholder="Search by movie title or keyword…">
+  <button class="button primary" type="submit">Search <span aria-hidden="true">↗</span></button>
+</form>
+{% endmacro %}

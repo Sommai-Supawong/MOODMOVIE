@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}{{ code }} — MoodMovie{% endblock %}
+{% block content %}<div class="container page empty-state error-page"><p class="eyebrow">{{ code }} / BETWEEN SCENES</p><h1>{{ title }}</h1><p>{{ message }}</p><div class="actions"><a class="button primary" href="{{ url_for('main.home') }}">Back to home</a><a class="button secondary" href="{{ url_for('movies.catalog') }}">Browse movies ↗</a></div></div>{% endblock %}

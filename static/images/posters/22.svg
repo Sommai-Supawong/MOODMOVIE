@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" role="img" aria-label="My Neighbor Totoro illustrated poster">
+<rect width="400" height="600" fill="#344d36"/>
+<circle cx="286" cy="138" r="65" fill="#e8dfb8" opacity=".8"/><path d="m0 340 126-193 95 147 58-72 121 130V600H0" fill="#8b9c75"/><path d="m0 389 118-82 135 54 147-52V600H0" fill="#1c3336"/><path d="m0 449 155-46 245 52V600H0" fill="#8b9c75" opacity=".5"/><ellipse cx="211" cy="333" rx="54" ry="66" fill="#e8dfb8"/><path d="m168 285 7-47 20 36m35 0 20-36 7 47" fill="#e8dfb8"/><circle cx="192" cy="306" r="5" fill="#25382c"/><circle cx="229" cy="306" r="5" fill="#25382c"/>
+<rect x="18" y="18" width="364" height="564" fill="none" stroke="#e8dfb8" stroke-opacity=".4"/>
+<text x="200" y="48" text-anchor="middle" fill="#e8dfb8" font-family="sans-serif" font-size="9" letter-spacing="4">THE MOODMOVIE COLLECTION</text>
+<rect x="25" y="419" width="350" height="146" fill="#344d36" opacity=".94"/>
+<text x="200" y="462" text-anchor="middle" fill="#e8dfb8" font-family="Georgia,serif" font-weight="bold" font-size="25.5">MY NEIGHBOR TOTORO</text>
+<text x="200" y="558" text-anchor="middle" fill="#e8dfb8" font-family="sans-serif" font-size="10" letter-spacing="3">1988 · ANIMATION</text>
+</svg>

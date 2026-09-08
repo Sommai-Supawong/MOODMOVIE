@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% from 'components.html' import movie_grid, mood_selector %}
+{% block title %}{{ selected_mood.name if selected_mood else 'Choose a mood' }} — MoodMovie{% endblock %}
+{% block content %}<div class="container page">
+<p class="eyebrow">A STORY FOR YOUR STATE OF MIND</p>
+{% if error %}<h1>Let’s find your feeling.</h1><p class="error-message" role="alert">{{ error }}</p>{% else %}<h1>Because you’re feeling <em>{{ selected_mood.name|lower }}.</em></h1><p class="intro">{{ selected_mood.description }} Here are a few stories to keep you company.</p>{% endif %}
+{{ mood_selector(moods, selected_mood) }}
+{% if selected_mood %}<div class="section-heading"><h2>Movies for your mood</h2><p>{{ movies|length }} picks · Highest rated first</p></div>{{ movie_grid(movies) }}
+{% if not movies %}<div class="empty-state"><h2>No movies for this mood yet.</h2><p>Try another feeling or explore the collection.</p><a class="button primary" href="{{ url_for('movies.catalog') }}">Browse movies</a></div>{% endif %}{% endif %}
+</div>{% endblock %}

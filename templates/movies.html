@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% from 'components.html' import movie_grid, genre_filter, search_form %}
+{% block title %}{{ selected_genre.name if selected_genre else 'The collection' }} — MoodMovie{% endblock %}
+{% block content %}<div class="container page">
+<p class="eyebrow">THE MOODMOVIE COLLECTION</p><h1>{{ selected_genre.name + ' movies' if selected_genre else 'Your next great story.' }}</h1><p class="intro">Familiar favorites. Unexpected discoveries. Find something for tonight.</p>
+{{ search_form() }}{{ genre_filter(genres, selected_genre) }}
+<div class="results-heading"><p>{{ movies|length }} films to explore</p><span>Curated for every feeling</span></div>
+{{ movie_grid(movies) }}
+{% if not movies %}<div class="empty-state"><h2>The collection is taking a moment.</h2><p>No movies are available here yet.</p><a class="button secondary" href="{{ url_for('movies.catalog') }}">Browse all movies</a></div>{% endif %}
+</div>{% endblock %}

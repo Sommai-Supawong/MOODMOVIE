@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070707">
+  <meta name="description" content="Find a movie that matches your mood. A small, thoughtfully curated movie collection.">
+  <title>{% block title %}MoodMovie — A story for every feeling{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+  <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="navbar glass">
+    <a class="brand" href="{{ url_for('main.home') }}" aria-label="MoodMovie home"><span class="brand-mark" aria-hidden="true">m</span>Mood<span>Movie</span><span class="brand-dot">.</span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu <span aria-hidden="true">☰</span></button>
+    <nav id="nav-links" aria-label="Main navigation">
+      <a {% if request.endpoint == 'main.home' %}aria-current="page"{% endif %} href="{{ url_for('main.home') }}">Home</a>
+      <a {% if request.endpoint in ['movies.catalog', 'movies.genre', 'movies.detail'] %}aria-current="page"{% endif %} href="{{ url_for('movies.catalog') }}">Movies</a>
+      <a {% if request.endpoint == 'main.recommend' %}aria-current="page"{% endif %} href="{{ url_for('main.home') }}#moods">Moods</a>
+      <a {% if request.endpoint == 'movies.search' %}aria-current="page"{% endif %} href="{{ url_for('movies.search') }}">Search <span aria-hidden="true">↗</span></a>
+      <a class="nav-surprise" href="{{ url_for('main.random_movie') }}">Surprise me <span aria-hidden="true">⤨</span></a>
+    </nav>
+  </header>
+  <main id="main">{% block content %}{% endblock %}</main>
+  <footer class="container footer"><a class="brand" href="{{ url_for('main.home') }}">MoodMovie<span class="brand-dot">.</span></a><p>A story for every feeling.</p><span>A small collection. Endless movie nights.</span></footer>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" role="img" aria-label="Chef illustrated poster">
+<rect width="400" height="600" fill="#543b2a"/>
+<circle cx="200" cy="250" r="129" fill="#e4c983" opacity=".85"/><path d="M74 270h252v86H74zM101 211h176l49 59H74z" fill="#b46b47"/><path d="M116 224h67v44h-67zm83 0h67l40 44H199z" fill="#243e43"/><circle cx="125" cy="358" r="27" fill="#1c2528"/><circle cx="278" cy="358" r="27" fill="#1c2528"/><path d="M30 389h340" stroke="#e4c983" stroke-width="2"/>
+<rect x="18" y="18" width="364" height="564" fill="none" stroke="#e4c983" stroke-opacity=".4"/>
+<text x="200" y="48" text-anchor="middle" fill="#e4c983" font-family="sans-serif" font-size="9" letter-spacing="4">THE MOODMOVIE COLLECTION</text>
+<rect x="25" y="419" width="350" height="146" fill="#543b2a" opacity=".94"/>
+<text x="200" y="462" text-anchor="middle" fill="#e4c983" font-family="Georgia,serif" font-weight="bold" font-size="30.0">CHEF</text>
+<text x="200" y="558" text-anchor="middle" fill="#e4c983" font-family="sans-serif" font-size="10" letter-spacing="3">2014 · COMEDY</text>
+</svg>

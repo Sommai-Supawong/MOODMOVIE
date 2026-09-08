@@ -1,0 +1,2 @@
+# Optional: browser validation only; the Flask app does not need this package.
+playwright>=1.50,<2

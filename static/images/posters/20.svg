@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" role="img" aria-label="The Truman Show illustrated poster">
+<rect width="400" height="600" fill="#274957"/>
+<circle cx="205" cy="180" r="114" fill="#e9d29a" opacity=".55"/><path d="M0 410V130h35V410" fill="#8fb1b4" stroke="#162932" stroke-width="2"/><path d="M40 410V170h35V410" fill="#8fb1b4" stroke="#162932" stroke-width="2"/><path d="M80 410V210h35V410" fill="#8fb1b4" stroke="#162932" stroke-width="2"/><path d="M120 410V250h35V410" fill="#8fb1b4" stroke="#162932" stroke-width="2"/><path d="M160 410V130h35V410" fill="#8fb1b4" stroke="#162932" stroke-width="2"/><path d="M200 410V170h35V410" fill="#8fb1b4" stroke="#162932" stroke-width="2"/><path d="M240 410V210h35V410" fill="#8fb1b4" stroke="#162932" stroke-width="2"/><path d="M280 410V250h35V410" fill="#8fb1b4" stroke="#162932" stroke-width="2"/><path d="M320 410V130h35V410" fill="#8fb1b4" stroke="#162932" stroke-width="2"/><path d="M360 410V170h35V410" fill="#8fb1b4" stroke="#162932" stroke-width="2"/><path d="m0 600 193-240h14l193 240" fill="#121e24"/><path d="m200 580 0-205" stroke="#e9d29a" stroke-width="2" stroke-dasharray="12 20"/>
+<rect x="18" y="18" width="364" height="564" fill="none" stroke="#e9d29a" stroke-opacity=".4"/>
+<text x="200" y="48" text-anchor="middle" fill="#e9d29a" font-family="sans-serif" font-size="9" letter-spacing="4">THE MOODMOVIE COLLECTION</text>
+<rect x="25" y="419" width="350" height="146" fill="#274957" opacity=".94"/>
+<text x="200" y="462" text-anchor="middle" fill="#e9d29a" font-family="Georgia,serif" font-weight="bold" font-size="30.0">THE TRUMAN SHOW</text>
+<text x="200" y="558" text-anchor="middle" fill="#e9d29a" font-family="sans-serif" font-size="10" letter-spacing="3">1998 · DRAMA</text>
+</svg>

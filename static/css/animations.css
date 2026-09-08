@@ -1,0 +1,82 @@
+@keyframes posterScroll {
+  to {
+    transform:translateX(calc(-50% - 9px));
+  }
+}
+
+.poster-track {
+  animation:posterScroll 55s linear infinite;
+}
+
+@keyframes arrive {
+  from {
+    opacity:0;
+    transform:translateY(12px);
+  }
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.hero-content>.eyebrow,.hero h1,.hero-description,.hero .actions {
+  animation:arrive .65s both;
+}
+
+.hero h1 {
+  animation-delay:.08s;
+}
+
+.hero-description {
+  animation-delay:.16s;
+}
+
+.hero .actions {
+  animation-delay:.24s;
+}
+
+.page {
+  animation:arrive .45s both;
+}
+
+.reveal {
+  transition:opacity .6s,transform .6s;
+}
+
+.reveal.pending {
+  opacity:0;
+  transform:translateY(20px);
+}
+
+.reveal.visible {
+  opacity:1;
+  transform:translateY(0);
+}
+
+@keyframes glassPulse {
+  50% {
+    opacity:.55;
+  }
+}
+
+.is-loading .loading-status {
+  animation:glassPulse 1.4s ease-in-out infinite;
+}
+
+@media(prefers-reduced-motion:reduce) {
+  html {
+    scroll-behavior:auto;
+  }
+  *,*::before,*::after {
+    animation:none!important;
+    transition:none!important;
+  }
+  .reveal.pending {
+    opacity:1;
+    transform:none;
+  }
+  [data-tilt] {
+    transform:none!important;
+  }
+}
+

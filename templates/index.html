@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% from 'components.html' import movie_grid, mood_selector, genre_filter %}
+{% block content %}
+<section class="hero">
+  <div class="poster-wall" aria-hidden="true"><div class="poster-track">{% for repeat in range(2) %}<div class="poster-group">{% for number in [13,9,21,3,17,23] %}<img src="{{ url_for('static', filename='images/posters/%02d.svg'|format(number)) }}" alt="" width="240" height="360">{% endfor %}</div>{% endfor %}</div></div>
+  <div class="hero-shade"></div>
+  <div class="container hero-content">
+    <p class="eyebrow"><span class="tiny-line"></span> GOOD FILMS. THE RIGHT FEELING.</p>
+    <h1>Find a movie that<br>matches your <em>mood.</em></h1>
+    <p class="hero-description">Some nights need an adventure. Others, a little comfort.<br>Let how you feel lead you to your next great film.</p>
+    <div class="actions"><a class="button primary" href="#moods">Find my mood <span aria-hidden="true">↓</span></a><a class="button secondary" href="{{ url_for('main.random_movie') }}">Surprise me <span aria-hidden="true">⤨</span></a></div>
+    <div class="hero-caption"><span>THE MOODMOVIE COLLECTION</span><span>Press pause on the search. Play a new story.</span></div>
+  </div>
+</section>
+<section class="container mood-section" id="moods">
+  <div class="section-heading"><div><p class="eyebrow">01 / THE FEELING</p><h2>How are you feeling?</h2></div><p>Pick a mood. We’ll take it from here.</p></div>
+  {{ mood_selector(moods) }}
+</section>
+<section class="container section reveal">
+  <div class="section-heading"><div><p class="eyebrow">02 / THE COLLECTION</p><h2>Worth a night in.</h2></div><a class="text-link" href="{{ url_for('movies.catalog') }}">Explore all movies <span aria-hidden="true">↗</span></a></div>
+  <p class="section-note">A few highly rated picks from our collection.</p>
+  {{ movie_grid(movies) }}
+</section>
+<section class="container section genre-section reveal"><div class="section-heading"><div><p class="eyebrow">03 / A DIFFERENT WAY IN</p><h2>Follow your curiosity.</h2></div><p>Have a genre in mind?</p></div>{{ genre_filter(genres) }}</section>
+{% endblock %}

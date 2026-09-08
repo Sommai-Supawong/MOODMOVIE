@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% from 'components.html' import movie_grid %}
+{% block title %}{{ movie.title }} — MoodMovie{% endblock %}
+{% block content %}<div class="detail-backdrop" aria-hidden="true"><img src="{{ url_for('static', filename=movie.poster) }}" alt=""></div>
+<div class="container page detail-page"><a class="text-link back-link" href="{{ url_for('movies.catalog') }}">← Back to movies</a>
+<section class="detail-layout">
+  <img class="detail-poster" data-tilt src="{{ url_for('static', filename=movie.poster) }}" data-fallback="{{ url_for('static', filename='images/poster-fallback.svg') }}" alt="{{ movie.title }} — illustrated poster" width="400" height="600">
+  <div class="detail-panel glass"><p class="eyebrow">TONIGHT’S FEATURE</p><h1>{{ movie.title }}</h1><p class="detail-meta">{{ movie.release_year }} <span>·</span> {{ movie.duration }} min <span>·</span> <a href="{{ url_for('movies.genre', genre=movie.genre.name) }}">{{ movie.genre.name }}</a></p>
+    <div class="detail-rating"><strong>★ {{ '%.1f'|format(movie.rating) }}</strong><span>/ 10 <small>Demo rating</small></span></div>
+    <h2 class="small-heading">The story</h2><p class="synopsis">{{ movie.description }}</p>
+    <a class="mood-tag" href="{{ url_for('main.recommend', mood=movie.mood.name|lower) }}"><span aria-hidden="true">{{ movie.mood.emoji }}</span> For when you’re feeling {{ movie.mood.name|lower }} <span aria-hidden="true">↗</span></a>
+    <div class="actions"><a class="button primary" href="#similar">More like this ↓</a><a class="button secondary" href="{{ url_for('main.random_movie') }}">Surprise me ⤨</a></div>
+  </div>
+</section>
+<section class="section reveal" id="similar"><div class="section-heading"><div><p class="eyebrow">STAY IN THE FEELING</p><h2>Keep the evening going.</h2></div><p>More {{ movie.mood.name|lower }} picks</p></div>{{ movie_grid(similar) }}{% if not similar %}<p>Explore another mood to discover more stories.</p>{% endif %}</section>
+</div>{% endblock %}
