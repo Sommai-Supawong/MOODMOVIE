@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: moodmovie
+    runtime: python
+    plan: free
+    branch: main
+    # app.py and requirements.txt are at the Git repository root.
+    buildCommand: pip install -r requirements.txt
+    # One worker initializes SQLite once; threads serve concurrent requests.
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 "app:create_app()"
+    healthCheckPath: /
+    autoDeployTrigger: commit

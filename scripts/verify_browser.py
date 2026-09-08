@@ -4,11 +4,12 @@ Uses installed Microsoft Edge. Start Flask separately before running this script
 Screenshots and a report are written to artifacts/ (ignored by git).
 """
 import json
+import sys
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-BASE = "http://127.0.0.1:5000"
-OUTPUT = Path("artifacts")
+BASE = sys.argv[1].rstrip('/') if len(sys.argv) > 1 else "http://127.0.0.1:5000"
+OUTPUT = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("artifacts")
 
 
 def no_overflow(page):
@@ -26,7 +27,7 @@ def screenshot(page, name):
 
 
 def main():
-    OUTPUT.mkdir(exist_ok=True)
+    OUTPUT.mkdir(parents=True, exist_ok=True)
     errors = []
     checks = []
     with sync_playwright() as playwright:
@@ -125,7 +126,8 @@ def main():
         checks.append("Mobile navigation and recommendations work without JavaScript")
         assert errors == [], errors
         browser.close()
-    report = {"browser": "Microsoft Edge (headless)", "checks": checks, "javascript_errors": errors}
+    report = {"browser": "Microsoft Edge (headless)", "base_url": BASE,
+              "checks": checks, "javascript_errors": errors}
     (OUTPUT / "browser-report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report, indent=2))
 
