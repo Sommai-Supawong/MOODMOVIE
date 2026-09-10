@@ -5,6 +5,13 @@ MoodMovie คือ Mini Project ระบบแนะนำภาพยนต�
 โปรเจกต์นี้ถูกพัฒนาขึ้นเพื่อประยุกต์ใช้แนวคิด **OOAD (Object-Oriented Analysis and Design)** และ **OOP (Object-Oriented Programming)** ร่วมกับการพัฒนา Web Application ด้วย **Python, Flask, HTML, CSS และ JavaScript**
 
 ---
+## 🌐 Live Demo
+
+ทดลองใช้งานเว็บไซต์ MoodMovie ได้ที่:
+
+🔗 **[MoodMovie — Live Demo](https://moodmovie-rnae.onrender.com/)**
+
+> Find a movie that matches your mood. 🎬
 
 # 📌 Project Overview
 
